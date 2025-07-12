@@ -59,31 +59,11 @@
     <Folder Include="MySQL" />
     <Folder Include="MySQL\StoredProcedures" />
     <Folder Include="MySQL\Tables" />
-    <Folder Include="SQLServer" />
-    <Folder Include="SQLServer\dbo" />
-    <Folder Include="SQLServer\dbo\StoredProcedures" />
-    <Folder Include="SQLServer\dbo\Tables" />
-    <Folder Include="SQLServer\dbo\Population" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="MySQL\StoredProcedures\spUser_Delete.sql" />
-    <Build Include="MySQL\StoredProcedures\spUser_Get.sql" />
-    <Build Include="MySQL\StoredProcedures\spUser_GetAll.sql" />
-    <Build Include="MySQL\StoredProcedures\spUser_Insert.sql" />
-    <Build Include="MySQL\StoredProcedures\spUser_Update.sql" />
-    <Build Include="MySQL\Tables\tblUser.sql" />
-    <Build Include="SQLServer\dbo\StoredProcedures\spUser_Delete.sql" />
-    <Build Include="SQLServer\dbo\StoredProcedures\spUser_Get.sql" />
-    <Build Include="SQLServer\dbo\StoredProcedures\spUser_GetAll.sql" />
-    <Build Include="SQLServer\dbo\StoredProcedures\spUser_Insert.sql" />
-    <Build Include="SQLServer\dbo\StoredProcedures\spUser_Update.sql" />
-    <Build Include="SQLServer\dbo\Tables\User.sql" />
+    <Build Include="MySQL\StoredProcedures\GetAllShiftData.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="SQLServer\Script.PostDeployment.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SQLServer\UserDB.publish.xml" />
-    <None Include="SQLServer\dbo\Population\tblUserPopulation.sql" />
+    <None Include="MySQL\Tables\ShiftData.sql" />
   </ItemGroup>
 </Project>

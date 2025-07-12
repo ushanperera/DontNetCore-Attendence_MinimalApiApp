@@ -10,7 +10,8 @@ builder.Services.AddSwaggerGen();
 
 //Add Application Servises
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddSingleton<IUserData, UserData>();
+//builder.Services.AddSingleton<IUserData, UserData>();
+builder.Services.AddSingleton<IShiftDataRepo, ShiftDataRepo>();
 
 var app = builder.Build();
 
@@ -20,7 +21,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
-app.ConfigureAPI();
+
+app.ConfigureEndpoints();
+
 app.Run();

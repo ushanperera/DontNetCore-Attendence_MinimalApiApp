@@ -1,12 +1,13 @@
-﻿using DataAccess.Models;
+﻿//using DataAccess.Models;
+//using DataAccess.Repositories.Data;
 
-namespace DataAccess.Repositories;
+//namespace DataAccess.Repositories;
 
-public interface IPersonRepository
-{
-    Task<IEnumerable<Person>> GetPeopleAsync();
-    Task<Person> GetPeopleByIdAsync(int id);
-    Task<Person> CreatePersonAsync(Person person);
-    Task UpdatePersonAsync(Person person);
-    Task DeletePersonAsync(int id);
-}
+//public interface IPersonRepository
+//{
+//    Task<IEnumerable<ShiftDataRepo>> GetPeopleAsync();
+//    //Task<PersonModel> GetPeopleByIdAsync(int id);
+//    //Task<PersonModel> CreatePersonAsync(PersonModel person);
+//    //Task UpdatePersonAsync(PersonModel person);
+//    //Task DeletePersonAsync(int id);
+//}
