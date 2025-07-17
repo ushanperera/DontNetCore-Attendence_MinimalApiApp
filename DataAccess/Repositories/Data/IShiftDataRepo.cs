@@ -5,4 +5,7 @@ public interface IShiftDataRepo
 {
     Task<IEnumerable<ShiftData>> GetShifts();
 
+    Task<int> InsertShift(ShiftData shift);
+
+
 }

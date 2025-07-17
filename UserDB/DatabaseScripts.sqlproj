@@ -62,8 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="MySQL\StoredProcedures\GetAllShiftData.sql" />
+    <Build Include="MySQL\StoredProcedures\ManageShiftData.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MySQL\Tables\ShiftData.sql" />
+    <None Include="MySQL\Query.sql" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 using Attendence_MinimalAPI;
 using DataAccess.DbAccess;
+using MovieMateAPI.Dependencies.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCoresServises();
 
 //Add Application Servises
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
@@ -24,5 +27,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.ConfigureEndpoints();
+app.UseAppCoresConfig();
+
 
 app.Run();

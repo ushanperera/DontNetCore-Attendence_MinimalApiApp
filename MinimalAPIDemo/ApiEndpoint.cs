@@ -7,6 +7,9 @@ public static class ApiEndpoint
 
         app.MapGet("/shiftData", GetShiftData);
 
+        app.MapPost("/shiftData", InsertShift);
+
+
         // Add route mapping for GetUsers
         //app.MapGet("/users", GetUsers);
         //app.MapGet("/users/{id:int}", GetUser);
@@ -20,19 +23,33 @@ public static class ApiEndpoint
 
 
 
-    //IUserData data is comming from the global using ile, so no need to inject seperately
-
+    //IShiftData data is comming from the global using ile, so no need to inject seperately
     private static async Task<IResult> GetShiftData(IShiftDataRepo data)
     {
-        //try
-        //{
-        var users = await data.GetShifts();
-        return Results.Ok(users);
-        //}
-        //catch (Exception ex)
-        //{
-        //    return Results.Problem(ex.Message);
-        //}
+        try
+        {
+            var shifts = await data.GetShifts();
+            return Results.Ok(shifts);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+
+    private static async Task<IResult> InsertShift(IShiftDataRepo repo, ShiftData shift)
+    {
+        try
+        {
+            var result = await repo.InsertShift(shift);
+
+            return Results.Created($"/shift/{shift.Id}", shift);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
     }
 
 
