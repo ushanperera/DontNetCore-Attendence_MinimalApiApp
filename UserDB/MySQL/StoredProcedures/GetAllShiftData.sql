@@ -14,3 +14,12 @@ WorkStartTime, WorkEndTime, MealBreakStartTime, MealBreakEndTime
 from shiftdata$$
 DELIMITER ;
 ;
+
+
+
+-- PHPMyAdmin
+
+CREATE PROCEDURE `GetAllShiftData`() NOT DETERMINISTIC NO SQL SQL SECURITY DEFINER SELECT Id, ShiftId, ShiftDate, WorkStartTime, WorkEndTime, MealBreakStartTime, MealBreakEndTime, IsPublicHoliday, ShiftRemarks FROM shiftdata
+
+
+

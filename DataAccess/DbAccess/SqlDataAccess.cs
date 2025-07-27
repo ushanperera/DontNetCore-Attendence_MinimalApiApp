@@ -2,8 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System.Data;
-using System.Data.SqlClient;
-
+using Microsoft.Data.SqlClient;
 
 namespace DataAccess.DbAccess;
 
@@ -16,21 +15,44 @@ public class SqlDataAccess : ISqlDataAccess
         _config = config;
     }
 
+    // Existing Stored Procedure SELECT
     public async Task<IEnumerable<T>> LoadData<T, U>(string storedProcedure, U parameters)
     {
         using IDbConnection connection = GetConnection();
-
         return await connection.QueryAsync<T>(storedProcedure, parameters,
                      commandType: CommandType.StoredProcedure);
     }
 
+    // Existing Stored Procedure INSERT/UPDATE
     public async Task SaveData<T>(string storedProcedure, T parameters)
     {
         using IDbConnection connection = GetConnection();
-
         await connection.ExecuteAsync(storedProcedure, parameters,
               commandType: CommandType.StoredProcedure);
     }
+
+    // NEW: Raw SQL SELECT query
+    public async Task<IEnumerable<T>> LoadDataQueryAsync<T, U>(string sqlQuery, U parameters)
+    {
+        using IDbConnection connection = GetConnection();
+        return await connection.QueryAsync<T>(sqlQuery, parameters, commandType: CommandType.Text);
+    }
+
+
+    // NEW: Raw SQL INSERT/UPDATE/DELETE query
+    public async Task<int> SaveDataExecuteAsync<T>(string sqlQuery, T parameters)
+    {
+        using IDbConnection connection = GetConnection();
+        return await connection.ExecuteAsync(sqlQuery, parameters,
+              commandType: CommandType.Text);
+    }
+
+
+
+
+
+
+
 
     public IDbConnection GetConnection(string? connectionId = "MySQL")
     {
@@ -41,8 +63,6 @@ public class SqlDataAccess : ISqlDataAccess
                 connection = new SqlConnection(_config.GetConnectionString(connectionId));
                 break;
             case "MySQL":
-                connection = new MySqlConnection(_config.GetConnectionString(connectionId));
-                break;
             default:
                 connection = new MySqlConnection(_config.GetConnectionString(connectionId));
                 break;

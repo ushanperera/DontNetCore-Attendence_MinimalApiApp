@@ -1,13 +1,14 @@
 ﻿namespace MovieMateAPI.Dependencies.Configs
 {
-    public static class CoresConfig
+    public static class CorsConfig
     {
-        private const string CoresPolicy = "AllowAll";
-        public static void AddCoresServises(this IServiceCollection services)
+        private const string CorsPolicy = "AllowAll";
+
+        public static void AddCorsServices(this IServiceCollection services)
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(CoresPolicy,
+                options.AddPolicy(CorsPolicy,
                     builder =>
                     {
                         builder.AllowAnyOrigin()
@@ -16,9 +17,10 @@
                     });
             });
         }
-        public static void UseAppCoresConfig(this IApplicationBuilder app)
+
+        public static void UseAppCorsConfig(this WebApplication app)
         {
-            app.UseCors(CoresPolicy);
+            app.UseCors(CorsPolicy);
         }
     }
 }
