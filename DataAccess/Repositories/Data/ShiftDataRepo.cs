@@ -55,8 +55,40 @@ public class ShiftDataRepo : IShiftDataRepo
 
 
     public Task<IEnumerable<ShiftData>> GetShiftData() =>
-     _db.LoadDataQueryAsync<ShiftData, dynamic>("SELECT * FROM shiftData", new { });
+     _db.LoadDataQueryAsync<ShiftData, dynamic>("" +
+         "SELECT " +
 
+         "ShiftId," +
+         "ShiftDate," +
+         "WorkStartTime," +
+         "WorkEndTime," +
+         "MealBreakStartTime," +
+         "MealBreakEndTime," +
+         "IsPublicHoliday," +
+         "IsWeekendShift," +
+         "ShiftRemarks," +
+
+         "RateId," +
+         "Rate," +
+
+         "TotalWorkedDuration," +
+         "TotalMealBreakDuration," +
+         "MealBreakGapDuration," +
+         "MealBreakPenaltyDuration," +
+         "NetWorkDuration," +
+         "ExtraHoursWorkedDuration," +
+         "WeekDayAntiSocialDuration," +
+
+         "HourlyPay," +
+         "ExtraHourPay," +
+         "MealBreakPenaltyPay," +
+         "PublicHolidayPenaltyPay," +
+         "WeekEndPenaltyPay," +
+         "WeekDayAntiSocialPay," +
+         "TotalDayPay" +
+
+
+         " FROM shiftData", new { });
 
     public async Task<int> InsertShift(ShiftData shift)
     {
@@ -67,21 +99,35 @@ public class ShiftDataRepo : IShiftDataRepo
         );
 
         string sql;
-
         if (!existingRecords.Any())
         {
+
+
+
             // Insert new shift
             sql = @"
             INSERT INTO shiftData (
                 ShiftId, ShiftDate,
                 WorkStartTime, WorkEndTime,
                 MealBreakStartTime, MealBreakEndTime,
-                IsPublicHoliday, ShiftRemarks
+                IsPublicHoliday, IsWeekendShift, ShiftRemarks,
+                RateId, Rate,
+                TotalWorkedDuration,TotalMealBreakDuration, MealBreakGapDuration,
+                MealBreakPenaltyDuration,NetWorkDuration,
+                ExtraHoursWorkedDuration, WeekDayAntiSocialDuration,
+                HourlyPay,ExtraHourPay,MealBreakPenaltyPay, PublicHolidayPenaltyPay, WeekEndPenaltyPay, WeekDayAntiSocialPay, TotalDayPay
+
             ) VALUES (
                 @ShiftId, @ShiftDate,
                 @WorkStartTime, @WorkEndTime,
                 @MealBreakStartTime, @MealBreakEndTime,
-                @IsPublicHoliday, @ShiftRemarks
+                @IsPublicHoliday, @IsWeekendShift, @ShiftRemarks,
+                @RateId, @Rate,
+                @TotalWorkedDuration,@TotalMealBreakDuration, @MealBreakGapDuration,
+                @MealBreakPenaltyDuration,@NetWorkDuration,
+                @ExtraHoursWorkedDuration, @WeekDayAntiSocialDuration,
+                @HourlyPay,@ExtraHourPay,@MealBreakPenaltyPay,@PublicHolidayPenaltyPay,@WeekEndPenaltyPay,@WeekDayAntiSocialPay,@TotalDayPay
+
             );";
         }
         else
@@ -95,24 +141,46 @@ public class ShiftDataRepo : IShiftDataRepo
                 MealBreakStartTime = @MealBreakStartTime,
                 MealBreakEndTime = @MealBreakEndTime,
                 IsPublicHoliday = @IsPublicHoliday,
-                ShiftRemarks = @ShiftRemarks
+                IsWeekendShift = @IsWeekendShift,
+                ShiftRemarks = @ShiftRemarks,
+                RateId = @RateId,
+                Rate = @Rate,
+                TotalWorkedDuration = @TotalWorkedDuration,
+                TotalMealBreakDuration = @TotalMealBreakDuration,
+                MealBreakGapDuration = @MealBreakGapDuration,
+                MealBreakPenaltyDuration = @MealBreakPenaltyDuration,
+                NetWorkDuration = @NetWorkDuration,
+                ExtraHoursWorkedDuration = @ExtraHoursWorkedDuration,
+                WeekDayAntiSocialDuration = @WeekDayAntiSocialDuration,
+                HourlyPay = @HourlyPay,
+                ExtraHourPay = @ExtraHourPay,
+                MealBreakPenaltyPay = @MealBreakPenaltyPay,
+                PublicHolidayPenaltyPay = @PublicHolidayPenaltyPay,
+                WeekEndPenaltyPay = @WeekEndPenaltyPay,
+                WeekDayAntiSocialPay = @WeekDayAntiSocialPay,
+                TotalDayPay = @TotalDayPay
+
+
             WHERE ShiftDate = @ShiftDate;";
         }
 
-        return await _db.SaveDataExecuteAsync(sql, new
-        {
-            shift.ShiftId,
-            shift.ShiftDate,
-            shift.WorkStartTime,
-            shift.WorkEndTime,
-            shift.MealBreakStartTime,
-            shift.MealBreakEndTime,
-            shift.IsPublicHoliday,
-            shift.ShiftRemarks
-        });
+        var debugQuery = _db.DebugFinalSQLQuerry(sql, shift);
+
+
+        return await _db.SaveDataExecuteAsync(sql, shift);
+
+        //return await _db.SaveDataExecuteAsync(sql, new
+        //{
+        //    shift.ShiftId,
+        //    shift.ShiftDate,
+        //    shift.WorkStartTime,
+        //    shift.WorkEndTime,
+        //    shift.MealBreakStartTime,
+        //    shift.MealBreakEndTime,
+        //    shift.IsPublicHoliday,
+        //    shift.ShiftRemarks
+
+        //});
     }
-
-
-
 
 }

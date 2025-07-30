@@ -18,14 +18,17 @@ ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `IsPublicHoliday` bool;
 ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `ShiftRemarks` varchar(50);
 
 
--- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `TotalWorkedDuration` Time;
--- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `TotalMealBreakDuration` Time;
--- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `MealBreakGapDuration` Time;
--- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `MealBreakPenaltyDuration` Time;
--- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `ExtraHoursWorkedDuration` Time;
+ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `RateId` INT NULL;
+ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `Rate` Float;
 
--- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `RateId` INT NULL;
--- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `Rate` Float;
+
+ ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `TotalWorkedDuration` Time;
+ ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `TotalMealBreakDuration` Time;
+ ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `MealBreakGapDuration` Time;
+ ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `MealBreakPenaltyDuration` Time;
+ ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `ExtraHoursWorkedDuration` Time;
+ ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `WeekDayAntiSocialDuration` Time;
+
 
 -- ALTER TABLE `shiftmanagement`.`shiftData` ADD COLUMN `IsWeekendShift` Time;
 

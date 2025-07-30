@@ -6,30 +6,32 @@ public class ShiftData
     public int ShiftId { get; set; }
     public DateTime ShiftDate { get; set; }
 
-    public string WorkStartTime { get; set; }
-    public string WorkEndTime { get; set; }
-    public string MealBreakStartTime { get; set; }
-    public string MealBreakEndTime { get; set; }
+    public TimeSpan WorkStartTime { get; set; }
+    public TimeSpan WorkEndTime { get; set; }
+    public TimeSpan MealBreakStartTime { get; set; }
+    public TimeSpan MealBreakEndTime { get; set; }
 
     public bool IsPublicHoliday { get; set; } = false;
+    public bool IsWeekendShift { get; set; } = false;
     public string ShiftRemarks { get; set; }
 
-    //public int RateId { get; set; }
-    //public float Rate { get; set; }
+    public int RateId { get; set; }
+    public float Rate { get; set; }
 
-    //public bool IsWeekendShift { get; set; }
+    public TimeSpan TotalWorkedDuration { get; set; }
+    public TimeSpan TotalMealBreakDuration { get; set; }
+    public TimeSpan MealBreakGapDuration { get; set; }
+    public TimeSpan MealBreakPenaltyDuration { get; set; }
+    public TimeSpan NetWorkDuration { get; set; }
+    public TimeSpan ExtraHoursWorkedDuration { get; set; }
+    public TimeSpan WeekDayAntiSocialDuration { get; set; }
 
-    //public string TotalWorkedDuration { get; set; }
-    //public string TotalMealBreakDuration { get; set; }
-    //public string MealBreakGapDuration { get; set; }
-    //public string MealBreakPenaltyDuration { get; set; }
-    //public string NetWorkDuration { get; set; }
-    //public string ExtraHoursWorkedDuration { get; set; }
-
-    //public int HourlyPay { get; set; }
-    //public int ExtraHourPay { get; set; }
-    //public int MealBreakPenaltyPay { get; set; }
-    //public int PublicHolidayPenaltyPay { get; set; }
-    //public int WeekEndPenaltyPay { get; set; }
-    //public int TotalDayPay { get; set; }
+    
+    public float HourlyPay { get; set; }
+    public float ExtraHourPay { get; set; }
+    public float MealBreakPenaltyPay { get; set; }
+    public float PublicHolidayPenaltyPay { get; set; }
+    public float WeekEndPenaltyPay { get; set; }
+    public float WeekDayAntiSocialPay { get; set; }
+    public float TotalDayPay { get; set; }
 }

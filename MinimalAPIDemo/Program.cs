@@ -16,6 +16,21 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.ListenAnyIP(5000); // HTTP
+
+//    options.ListenAnyIP(5001, listenOptions =>
+//    {
+//        listenOptions.UseHttps("/etc/letsencrypt/live/watchdog.lk/cert.pfx", "watchdog5000pw");
+//    });
+//});
+
+
+
+
+
 // Register CORS and application services
 builder.Services.AddCorsServices();
 
@@ -23,25 +38,25 @@ builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddSingleton<IShiftDataRepo, ShiftDataRepo>();
 
 var app = builder.Build();
+
+// Enable CORS - Must be called before other middleware
+app.UseAppCorsConfig();
+
+// Enable HTTPS redirection
 //app.UseHttpsRedirection();
 
-// Enable Swagger (even in production)
+// Enable Swagger
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Attendance API V1");
-    options.RoutePrefix = "swagger"; // Available at /swagger
+    options.RoutePrefix = "swagger";
 });
-
-// Enable CORS
-app.UseAppCorsConfig();
 
 // Map API routes
 app.ConfigureEndpoints();
 
-// ✅ Make sure the app listens on all IPs, not just localhost
-//app.Run();
-app.Run("http://0.0.0.0:5000");
+app.Run();
 
 
 

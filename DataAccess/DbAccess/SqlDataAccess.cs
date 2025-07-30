@@ -48,6 +48,32 @@ public class SqlDataAccess : ISqlDataAccess
     }
 
 
+    public string DebugFinalSQLQuerry<T>(string sql, T parameters)
+    {
+        if (parameters == null) return sql;
+
+        var props = typeof(T).GetProperties();
+
+        foreach (var prop in props)
+        {
+            var name = prop.Name;
+            var value = prop.GetValue(parameters);
+            string formattedValue = value switch
+            {
+                null => "NULL",
+                string s => $"'{s.Replace("'", "''")}'",
+                DateTime dt => $"'{dt:yyyy-MM-dd HH:mm:ss}'",
+                bool b => b ? "1" : "0",
+                _ => value?.ToString()
+            };
+
+            sql = sql.Replace("@" + name, formattedValue);
+        }
+
+        return sql;
+    }
+
+
 
 
 
@@ -69,4 +95,6 @@ public class SqlDataAccess : ISqlDataAccess
         }
         return connection;
     }
+
+
 }

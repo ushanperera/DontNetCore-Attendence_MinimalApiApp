@@ -11,9 +11,10 @@
                 options.AddPolicy(CorsPolicy,
                     builder =>
                     {
-                        builder.AllowAnyOrigin()
+                        builder.SetIsOriginAllowed(origin => true)
                                .AllowAnyMethod()
-                               .AllowAnyHeader();
+                               .AllowAnyHeader()
+                               .AllowCredentials();
                     });
             });
         }
