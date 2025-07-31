@@ -8,19 +8,56 @@ public static class ApiEndpoint
 
 
         app.MapGet("/shiftData", GetShiftData);
+        app.MapGet("/shiftDataSummary", GetShiftSummary);
+
         app.MapPost("/shiftData", InsertShift);
 
-
-        // Add route mapping for GetUsers
-        //app.MapGet("/users", GetUsers);
-        //app.MapGet("/users/{id:int}", GetUser);
-        //app.MapPost("/users", InsertUser);
         //app.MapPut("/users/{id:int}", UpdateUser);
         //app.MapDelete("/users/{id:int}", DeleteUser);
 
 
     }
 
+    private static async Task<IResult> GetShiftData(IShiftDataRepo data)
+    {
+        try
+        {
+            var shifts = await data.GetShiftData();
+            return Results.Ok(shifts);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> GetShiftSummary(IShiftDataRepo data, DateTime ?fromDate , DateTime ?toDate)
+    {
+        try
+        {
+       
+            var shifts = await data.GetShiftSummaryData(fromDate, toDate);
+            return Results.Ok(shifts);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> InsertShift(IShiftDataRepo repo, ShiftData shift)
+    {
+        try
+        {
+            var result = await repo.InsertShift(shift);
+
+            return Results.Created($"/shift/{shift.Id}", shift);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
 
 
 
@@ -41,33 +78,6 @@ public static class ApiEndpoint
 
 
 
-    private static async Task<IResult> GetShiftData(IShiftDataRepo data)
-    {
-        try
-        {
-            var shifts = await data.GetShiftData();
-            return Results.Ok(shifts);
-        }
-        catch (Exception ex)
-        {
-            return Results.Problem(ex.Message);
-        }
-    }
-
-
-    private static async Task<IResult> InsertShift(IShiftDataRepo repo, ShiftData shift)
-    {
-        try
-        {
-            var result = await repo.InsertShift(shift);
-
-            return Results.Created($"/shift/{shift.Id}", shift);
-        }
-        catch (Exception ex)
-        {
-            return Results.Problem(ex.Message);
-        }
-    }
 
 
 

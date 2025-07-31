@@ -1,5 +1,7 @@
 ﻿using DataAccess.DbAccess;
 using DataAccess.Models;
+using Mysqlx;
+using System.Threading.Tasks;
 
 namespace DataAccess.Repositories.Data;
 
@@ -11,48 +13,6 @@ public class ShiftDataRepo : IShiftDataRepo
     {
         _db = db;
     }
-
-    //public Task<IEnumerable<ShiftData>> GetShifts() =>
-    //    _db.LoadData<ShiftData, dynamic>("GetAllShiftData", new { });
-
-
-    //public async Task<int> InsertShift(ShiftData shift)
-    //{
-    //    // Assuming ManageShiftData does an insert/update
-    //    await _db.SaveData(
-    //        "ManageShiftData",
-    //        new
-    //        {
-    //            p_ShiftId = shift.ShiftId,
-    //            p_ShiftDate = shift.ShiftDate,
-
-    //            p_WorkStartTime = shift.WorkStartTime,
-    //            p_WorkEndTime = shift.WorkEndTime,
-    //            p_MealBreakStartTime = shift.MealBreakStartTime,
-    //            p_MealBreakEndTime = shift.MealBreakEndTime,
-
-    //            p_IsPublicHoliday = shift.IsPublicHoliday,
-    //            p_ShiftRemarks = shift.ShiftRemarks,
-
-    //            //p_RateId = shift.RateId,
-    //            //p_Rate = shift.Rate,
-    //            //p_IsWeekendShift = shift.IsWeekendShift
-
-    //            //p_TotalWorkedDuration = shift.TotalWorkedDuration,
-    //            //p_TotalMealBreakDuration = shift.TotalMealBreakDuration,
-    //            //p_MealBreakGapDuration = shift.MealBreakGapDuration,
-    //            //p_MealBreakPenaltyDuration = shift.MealBreakPenaltyDuration,
-    //            //p_NetWorkDuration = shift.NetWorkDuration,
-    //            //p_ExtraHoursWorkedDuration = shift.ExtraHoursWorkedDuration,
-
-
-    //        });
-
-    //    // Return the number of affected rows or the new ID
-    //    return 1; // Adjust based on your needs
-    //}
-
-
 
     public Task<IEnumerable<ShiftData>> GetShiftData() =>
      _db.LoadDataQueryAsync<ShiftData, dynamic>("" +
@@ -89,6 +49,70 @@ public class ShiftDataRepo : IShiftDataRepo
 
 
          " FROM shiftData", new { });
+
+    public Task<ShiftMonthlySummary> GetShiftSummaryData(DateTime? fromDate, DateTime? toDate)
+    {
+
+        var _fromDate = fromDate ?? DateTime.UtcNow;
+        var _toDateo = toDate ?? DateTime.UtcNow;
+
+
+        var sql = @"
+         SELECT " +
+
+         "ShiftId," +
+         "ShiftDate," +
+         "WorkStartTime," +
+         "WorkEndTime," +
+         "MealBreakStartTime," +
+         "MealBreakEndTime," +
+         "IsPublicHoliday," +
+         "IsWeekendShift," +
+         "ShiftRemarks," +
+
+         "RateId," +
+         "Rate," +
+
+         "TotalWorkedDuration," +
+         "TotalMealBreakDuration," +
+         "MealBreakGapDuration," +
+         "MealBreakPenaltyDuration," +
+         "NetWorkDuration," +
+         "ExtraHoursWorkedDuration," +
+         "WeekDayAntiSocialDuration," +
+
+         "HourlyPay," +
+         "ExtraHourPay," +
+         "MealBreakPenaltyPay," +
+         "PublicHolidayPenaltyPay," +
+         "WeekEndPenaltyPay," +
+         "WeekDayAntiSocialPay," +
+         "TotalDayPay" +
+
+
+         " FROM shiftData" +
+         " WHERE ShiftDate >= '" + _fromDate.ToString("yyyy-MM-dd") + "'" +
+         " AND ShiftDate <= '" + _toDateo.ToString("yyyy-MM-dd") + "'" + ";";
+
+        var debugQuery = _db.DebugFinalSQLQuerry(sql, new { });
+
+        List<ShiftData> shiftDataList = _db.LoadDataQueryAsync<ShiftData, dynamic>(sql, new { }).Result.ToList();
+
+        float numberOfHours = (float)shiftDataList.Sum(s => s.TotalWorkedDuration.TotalMinutes) / 60;
+        float extraHoursWorkedDuration = (float)shiftDataList.Sum(s => s.ExtraHoursWorkedDuration.TotalMinutes) / 60;
+        float totalPay = shiftDataList.Sum(s => s.TotalDayPay);
+
+        ShiftMonthlySummary shiftMonthlySummary = new ShiftMonthlySummary
+        {
+            NumberOfHoursWorked = numberOfHours,
+            ExtraHoursWorkedDuration = extraHoursWorkedDuration,
+            TotalPay = totalPay
+        };
+
+        return Task.FromResult(shiftMonthlySummary);
+
+    }
+
 
     public async Task<int> InsertShift(ShiftData shift)
     {
@@ -182,5 +206,46 @@ public class ShiftDataRepo : IShiftDataRepo
 
         //});
     }
+
+
+    //public Task<IEnumerable<ShiftData>> GetShifts() =>
+    //    _db.LoadData<ShiftData, dynamic>("GetAllShiftData", new { });
+
+
+    //public async Task<int> InsertShift(ShiftData shift)
+    //{
+    //    // Assuming ManageShiftData does an insert/update
+    //    await _db.SaveData(
+    //        "ManageShiftData",
+    //        new
+    //        {
+    //            p_ShiftId = shift.ShiftId,
+    //            p_ShiftDate = shift.ShiftDate,
+
+    //            p_WorkStartTime = shift.WorkStartTime,
+    //            p_WorkEndTime = shift.WorkEndTime,
+    //            p_MealBreakStartTime = shift.MealBreakStartTime,
+    //            p_MealBreakEndTime = shift.MealBreakEndTime,
+
+    //            p_IsPublicHoliday = shift.IsPublicHoliday,
+    //            p_ShiftRemarks = shift.ShiftRemarks,
+
+    //            //p_RateId = shift.RateId,
+    //            //p_Rate = shift.Rate,
+    //            //p_IsWeekendShift = shift.IsWeekendShift
+
+    //            //p_TotalWorkedDuration = shift.TotalWorkedDuration,
+    //            //p_TotalMealBreakDuration = shift.TotalMealBreakDuration,
+    //            //p_MealBreakGapDuration = shift.MealBreakGapDuration,
+    //            //p_MealBreakPenaltyDuration = shift.MealBreakPenaltyDuration,
+    //            //p_NetWorkDuration = shift.NetWorkDuration,
+    //            //p_ExtraHoursWorkedDuration = shift.ExtraHoursWorkedDuration,
+
+
+    //        });
+
+    //    // Return the number of affected rows or the new ID
+    //    return 1; // Adjust based on your needs
+    //}
 
 }
