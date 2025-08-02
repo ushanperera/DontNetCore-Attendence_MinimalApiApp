@@ -8,8 +8,8 @@ public class ShiftData
 
     public TimeSpan WorkStartTime { get; set; }
     public TimeSpan WorkEndTime { get; set; }
-    public TimeSpan MealBreakStartTime { get; set; }
-    public TimeSpan MealBreakEndTime { get; set; }
+    public TimeSpan? MealBreakStartTime { get; set; } 
+    public TimeSpan? MealBreakEndTime { get; set; }
 
     public bool IsPublicHoliday { get; set; } = false;
     public bool IsWeekendShift { get; set; } = false;
@@ -25,13 +25,19 @@ public class ShiftData
     public TimeSpan NetWorkDuration { get; set; }
     public TimeSpan ExtraHoursWorkedDuration { get; set; }
     public TimeSpan WeekDayAntiSocialDuration { get; set; }
+    public TimeSpan WeekDayLateNightDuration { get; set; }
+    public TimeSpan WeekEndMoreThanEightDuration { get; set; }
 
-    
+
     public float HourlyPay { get; set; }
     public float ExtraHourPay { get; set; }
     public float MealBreakPenaltyPay { get; set; }
     public float PublicHolidayPenaltyPay { get; set; }
     public float WeekEndPenaltyPay { get; set; }
     public float WeekDayAntiSocialPay { get; set; }
+    public float WeekDayLateNightPay { get; set; }
+    public float WeekEndMoreThanEightPay { get; set; }
+    
+        
     public float TotalDayPay { get; set; }
 }

@@ -38,6 +38,8 @@ public class ShiftDataRepo : IShiftDataRepo
          "NetWorkDuration," +
          "ExtraHoursWorkedDuration," +
          "WeekDayAntiSocialDuration," +
+         "WeekDayLateNightDuration," +
+         "WeekEndMoreThanEightDuration," +
 
          "HourlyPay," +
          "ExtraHourPay," +
@@ -45,6 +47,8 @@ public class ShiftDataRepo : IShiftDataRepo
          "PublicHolidayPenaltyPay," +
          "WeekEndPenaltyPay," +
          "WeekDayAntiSocialPay," +
+         "WeekDayLateNightPay," +
+         "WeekEndMoreThanEightPay," +
          "TotalDayPay" +
 
 
@@ -80,13 +84,17 @@ public class ShiftDataRepo : IShiftDataRepo
          "NetWorkDuration," +
          "ExtraHoursWorkedDuration," +
          "WeekDayAntiSocialDuration," +
-
+         "WeekDayLateNightDuration," +
+         "WeekEndMoreThanEightDuration," +
+         
          "HourlyPay," +
          "ExtraHourPay," +
          "MealBreakPenaltyPay," +
          "PublicHolidayPenaltyPay," +
          "WeekEndPenaltyPay," +
          "WeekDayAntiSocialPay," +
+         "WeekDayLateNightPay," +
+         "WeekEndMoreThanEightPay," +
          "TotalDayPay" +
 
 
@@ -98,14 +106,22 @@ public class ShiftDataRepo : IShiftDataRepo
 
         List<ShiftData> shiftDataList = _db.LoadDataQueryAsync<ShiftData, dynamic>(sql, new { }).Result.ToList();
 
-        float numberOfHours = (float)shiftDataList.Sum(s => s.TotalWorkedDuration.TotalMinutes) / 60;
-        float extraHoursWorkedDuration = (float)shiftDataList.Sum(s => s.ExtraHoursWorkedDuration.TotalMinutes) / 60;
+        TimeSpan totalWorkedDuration = shiftDataList.Aggregate(TimeSpan.Zero, (sum, s) => sum + s.TotalWorkedDuration);
+        TimeSpan netWorkDuration = shiftDataList.Aggregate(TimeSpan.Zero, (sum, s) => sum + s.NetWorkDuration);
+        TimeSpan extraHoursWorkedDuration = shiftDataList.Aggregate(TimeSpan.Zero, (sum, s) => sum + s.ExtraHoursWorkedDuration);
+
         float totalPay = shiftDataList.Sum(s => s.TotalDayPay);
+
+        string totalWorkedFormatted = $"{(int)totalWorkedDuration.TotalHours}:{totalWorkedDuration.Minutes:D2}";
+        string netWorkFormatted = $"{(int)netWorkDuration.TotalHours}:{netWorkDuration.Minutes:D2}";
+        string extraHoursFormatted = $"{(int)extraHoursWorkedDuration.TotalHours}:{extraHoursWorkedDuration.Minutes:D2}";
+
 
         ShiftMonthlySummary shiftMonthlySummary = new ShiftMonthlySummary
         {
-            NumberOfHoursWorked = numberOfHours,
-            ExtraHoursWorkedDuration = extraHoursWorkedDuration,
+            TotalWorkedDuration = totalWorkedFormatted,
+            NetWorkDuration = netWorkFormatted,
+            ExtraHoursWorkedDuration = extraHoursFormatted,
             TotalPay = totalPay
         };
 
@@ -176,12 +192,20 @@ public class ShiftDataRepo : IShiftDataRepo
                 NetWorkDuration = @NetWorkDuration,
                 ExtraHoursWorkedDuration = @ExtraHoursWorkedDuration,
                 WeekDayAntiSocialDuration = @WeekDayAntiSocialDuration,
+
+                WeekDayLateNightDuration = @WeekDayLateNightDuration,
+                WeekEndMoreThanEightDuration = @WeekEndMoreThanEightDuration,
+
                 HourlyPay = @HourlyPay,
                 ExtraHourPay = @ExtraHourPay,
                 MealBreakPenaltyPay = @MealBreakPenaltyPay,
                 PublicHolidayPenaltyPay = @PublicHolidayPenaltyPay,
                 WeekEndPenaltyPay = @WeekEndPenaltyPay,
                 WeekDayAntiSocialPay = @WeekDayAntiSocialPay,
+
+                WeekDayLateNightPay = @WeekDayLateNightPay,
+                WeekEndMoreThanEightPay = @WeekEndMoreThanEightPay,
+
                 TotalDayPay = @TotalDayPay
 
 
@@ -193,18 +217,6 @@ public class ShiftDataRepo : IShiftDataRepo
 
         return await _db.SaveDataExecuteAsync(sql, shift);
 
-        //return await _db.SaveDataExecuteAsync(sql, new
-        //{
-        //    shift.ShiftId,
-        //    shift.ShiftDate,
-        //    shift.WorkStartTime,
-        //    shift.WorkEndTime,
-        //    shift.MealBreakStartTime,
-        //    shift.MealBreakEndTime,
-        //    shift.IsPublicHoliday,
-        //    shift.ShiftRemarks
-
-        //});
     }
 
 
